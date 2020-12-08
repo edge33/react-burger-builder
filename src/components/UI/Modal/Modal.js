@@ -8,7 +8,7 @@ class Modal extends Component {
   // NOTE: Checks if the the state of the BurgerBuild has changed in order to prevent render
   // when only Ingredients are changed -> it also prevents render on OrderSummary (Which is a wrapped by Modal)
   shouldComponentUpdate(nextProps, nextState, nextContext) {
-    return nextProps.show !== this.props.show
+    return nextProps.show !== this.props.show || nextProps.children !== this.props.children
   }
 
   render() {
