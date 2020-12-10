@@ -8,21 +8,15 @@ import Spinner from '../../components/UI/Spinner/Spinner'
 import withErrorHandler from '../../hoc/withErrorHandler/withErrorHandler'
 import axios from '../../axios-orders'
 import { connect } from 'react-redux'
-import * as actions from '../../store/actions'
+import * as actions from '../../store/actions/index'
 
 class BurgerBuilder extends Component {
   state = {
     purchasing: false,
-    error: false,
   }
 
   componentDidMount() {
-    // axios
-    //   .get('/ingredients.json')
-    //   .then((response) => {
-    //     this.setState({ ingredients: response.data })
-    //   })
-    //   .catch((_) => this.setState({ error: true }))
+    this.props.initIngredients()
   }
 
   purchaseHandler = () => {
@@ -34,6 +28,7 @@ class BurgerBuilder extends Component {
   }
 
   purchaseContinueHandler = () => {
+    this.props.purchaseInit()
     this.props.history.push('/checkout')
   }
 
@@ -45,7 +40,7 @@ class BurgerBuilder extends Component {
       disabledInfo[key] = disabledInfo[key] <= 0
     }
     let orderSummary = null
-    let burger = this.state.error ? (
+    let burger = this.props.error ? (
       <p>Ingredients can't be loaded!</p>
     ) : (
       <Spinner />
@@ -92,17 +87,18 @@ class BurgerBuilder extends Component {
 
 const mapsStateToProps = (state) => {
   return {
-    ingredients: state.ingredients,
-    totalPrice: state.totalPrice,
+    ingredients: state.burgerBuilder.ingredients,
+    totalPrice: state.burgerBuilder.totalPrice,
+    error: state.burgerBuilder.error,
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    onIngredientAdded: (name) =>
-      dispatch({ type: actions.ADD_INGREDIENT, ingredientName: name }),
-    onIngredientRemoved: (name) =>
-      dispatch({ type: actions.REMOVE_INGREDIENT, ingredientName: name }),
+    onIngredientAdded: (name) => dispatch(actions.addIngredient(name)),
+    onIngredientRemoved: (name) => dispatch(actions.removeIngredient(name)),
+    initIngredients: () => dispatch(actions.initIngredients()),
+    purchaseInit: () => dispatch(actions.purchaseInit()),
   }
 }
 
