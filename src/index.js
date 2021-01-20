@@ -2,13 +2,14 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import { createStore, applyMiddleware, compose, combineReducers } from 'redux'
 import { BrowserRouter } from 'react-router-dom'
+import { Provider } from 'react-redux'
+import reportWebVitals from './reportWebVitals'
 
 import './index.css'
 import App from './App'
-import { Provider } from 'react-redux'
-import reportWebVitals from './reportWebVitals'
 import burgerBuilderReducer from './store/reducers/burgerBuilder'
 import orderReducer from './store/reducers/order'
+import authReducer from './store/reducers/auth'
 
 import asyncFunctionMiddleware from './middlewares/asyncFunctionMiddleware'
 
@@ -24,6 +25,7 @@ const enhancers = composeEnhancers(applyMiddleware(asyncFunctionMiddleware))
 const rootReducer = combineReducers({
   burgerBuilder: burgerBuilderReducer,
   order: orderReducer,
+  auth: authReducer,
 })
 
 const store = createStore(rootReducer, enhancers)

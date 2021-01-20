@@ -10,6 +10,7 @@ import * as actions from '../../../store/actions/index'
 
 const VALIDATION_MESSAGES = {
   required: 'The field is required',
+  isEmail: 'The field must contain a valid e-mail address',
   minLength: 'The field must be at least % characters long',
   maxLength: 'The field must be at most % characters long',
 }
@@ -68,6 +69,7 @@ class ContactData extends Component {
         elementConfig: { type: 'email', placeholder: 'Email' },
         value: '',
         validation: {
+          isEmail: true,
           required: true,
         },
         valid: false,
@@ -94,9 +96,7 @@ class ContactData extends Component {
     event.preventDefault()
     const formData = {}
     for (const formElementIdentifier in this.state.orderForm) {
-      formData[formElementIdentifier] = this.state.orderForm[
-        formElementIdentifier
-      ].value
+      formData[formElementIdentifier] = this.state.orderForm[formElementIdentifier].value
     }
 
     const order = {
@@ -120,10 +120,7 @@ class ContactData extends Component {
       if (!isValid) {
         return {
           isValid: false,
-          errorMessage: VALIDATION_MESSAGES.minLength.replace(
-            '%',
-            rules.minLength,
-          ),
+          errorMessage: VALIDATION_MESSAGES.minLength.replace('%', rules.minLength),
         }
       }
     }
@@ -133,10 +130,18 @@ class ContactData extends Component {
       if (!isValid) {
         return {
           isValid: false,
-          errorMessage: VALIDATION_MESSAGES.maxLength.replace(
-            '%',
-            rules.maxLength,
-          ),
+          errorMessage: VALIDATION_MESSAGES.maxLength.replace('%', rules.maxLength),
+        }
+      }
+    }
+
+    if (rules.isEmail) {
+      const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+      isValid = pattern.test(value) && isValid
+      if (!isValid) {
+        return {
+          isValid: false,
+          errorMessage: VALIDATION_MESSAGES.isEmail,
         }
       }
     }
@@ -151,10 +156,7 @@ class ContactData extends Component {
       ...updatedOrderForm[inputIdentifier],
     }
     updatedFormElement.value = event.target.value
-    const formElementValidity = this.checkValidity(
-      updatedFormElement.value,
-      updatedFormElement.validation,
-    )
+    const formElementValidity = this.checkValidity(updatedFormElement.value, updatedFormElement.validation)
     updatedFormElement.valid = formElementValidity.isValid
     updatedFormElement.errorMessage = formElementValidity.errorMessage
     updatedFormElement.touched = true
@@ -222,7 +224,4 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(withErrorHandler(ContactData, axios))
+export default connect(mapStateToProps, mapDispatchToProps)(withErrorHandler(ContactData, axios))

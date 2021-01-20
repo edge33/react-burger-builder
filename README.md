@@ -1,5 +1,9 @@
 # Getting Started with Create React App
 
+## GET API_KEY TO USE AUTH
+
+in order to use FireBase Auth set your own api key in the _config.js_ file
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
