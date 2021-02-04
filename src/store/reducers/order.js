@@ -2,7 +2,7 @@ import * as actionTypes from '../actions/actionTypes'
 import { updateObject } from '../utility'
 
 const initialState = {
-  orders: null,
+  orders: [],
   loading: true,
   purchased: false,
 }
